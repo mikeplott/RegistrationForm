@@ -78,9 +78,8 @@ public class Main {
                 "/user",
                 (request, response) -> {
                     JsonSerializer serializer = new JsonSerializer();
-                    UsersWrapper wrapper = new UsersWrapper();
-                    wrapper.users = selectUsers(conn);
-                    return serializer.deep(true).serialize(wrapper);
+                    ArrayList<User> users = selectUsers(conn);
+                    return serializer.deep(true).serialize(users);
                 }
         );
 
@@ -90,9 +89,8 @@ public class Main {
                     String body = request.body();
                     JsonParser parser = new JsonParser();
                     HashMap<String, String> user = parser.parse(body);
-                    User user1 = new User(user.get("username"), user.get("address"), user.get("email"));
-                    insertUser(conn, user1.username, user1.address, user1.email);
-                    return null;
+                    insertUser(conn, user.get("username"), user.get("address"), user.get("email"));
+                    return "";
                 }
         );
 
@@ -100,9 +98,9 @@ public class Main {
                 "/user",
                 (request, response) -> {
                     JsonParser parser = new JsonParser();
-                    HashMap<String, String> user = parser.parse(request.body());
-                    updateUser(conn, user.get("username"), user.get("address"), user.get("email"), Integer.parseInt(user.get("id")));
-                    return null;
+                    User user = parser.parse(request.body(), User.class);
+                    updateUser(conn, user.username, user.address, user.email, user.id);
+                    return "";
                 }
         );
 
@@ -112,7 +110,7 @@ public class Main {
                     JsonParser parser = new JsonParser();
                     Integer id = parser.parse(request.params(":id"));
                     deleteUser(conn, id);
-                    return null;
+                    return "";
                 }
         );
     }

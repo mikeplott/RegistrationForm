@@ -18,4 +18,11 @@ public class UsersWrapper {
     public ArrayList<User> getUsers() {
         return users;
     }
+
+    @Override
+    public String toString() {
+        return "UsersWrapper{" +
+                "users=" + users +
+                '}';
+    }
 }
